@@ -1,15 +1,14 @@
-export default function handler() {
+export default function handler(_request, response) {
   const destination = process.env.REDIRECT_TO;
 
   if (!destination) {
-    return new Response("Missing REDIRECT_TO", { status: 500 });
+    response.statusCode = 500;
+    response.end("Missing REDIRECT_TO");
+    return;
   }
 
-  return new Response(null, {
-    status: 302,
-    headers: {
-      Location: destination,
-      "Cache-Control": "no-store"
-    }
-  });
+  response.statusCode = 302;
+  response.setHeader("Location", destination);
+  response.setHeader("Cache-Control", "no-store");
+  response.end();
 }
